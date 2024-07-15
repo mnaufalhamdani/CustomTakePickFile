@@ -2,7 +2,6 @@
 
 package com.mnaufalhamdani.takepickfile.fragment
 
-import android.Manifest
 import android.os.Bundle
 import android.os.Environment
 import android.view.LayoutInflater

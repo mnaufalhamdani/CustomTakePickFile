@@ -9,8 +9,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
-import android.graphics.RectF
-import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
@@ -21,9 +19,7 @@ import android.os.Looper
 import android.os.SystemClock
 import android.provider.MediaStore
 import android.util.Log
-import android.view.MotionEvent
 import android.view.OrientationEventListener
-import android.view.ScaleGestureDetector
 import android.view.Surface
 import android.view.View
 import android.widget.Toast
@@ -52,7 +48,6 @@ import androidx.camera.video.VideoCapture
 import androidx.camera.video.VideoRecordEvent
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.net.toFile
 import com.google.android.gms.location.LocationRequest
 import com.mnaufalhamdani.takepickfile.R
@@ -77,7 +72,6 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
 class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
     companion object {
