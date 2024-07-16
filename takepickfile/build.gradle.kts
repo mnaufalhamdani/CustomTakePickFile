@@ -1,14 +1,15 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("maven-publish")
 }
 
 android {
-    namespace = "com.mnaufalhamdani.takepickfile"
-    compileSdk = 34
+    namespace = Configs.moduleId
+    compileSdk = Configs.compileSdk
 
     defaultConfig {
-        minSdk = 21
+        minSdk = Configs.minSdk
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -24,11 +25,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = Configs.javaVersion
+        targetCompatibility = Configs.javaVersion
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = Configs.javaVersion.toString()
     }
     buildFeatures {
         viewBinding = true
@@ -70,4 +71,20 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.play.services.maps)
     implementation(libs.face.detection)
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            create<MavenPublication>("release") {
+                // Applies the component for the release build variant.
+                // NOTE : Delete this line code if you publish Native Java / Kotlin Library
+                from(components["release"])
+                groupId = PublishSetting.groupId
+                artifactId = PublishSetting.artifactId
+                version = PublishSetting.version
+            }
+        }
+    }
 }
