@@ -4,15 +4,15 @@ plugins {
 }
 
 android {
-    namespace = "com.mnaufalhamdani.customtakepickfile"
-    compileSdk = 34
+    namespace = Configs.applicationId
+    compileSdk = Configs.compileSdk
 
     defaultConfig {
-        applicationId = "com.mnaufalhamdani.customtakepickfile"
-        minSdk = 21
-        targetSdk = 29
-        versionCode = 1
-        versionName = "1.0"
+        applicationId = Configs.applicationId
+        minSdk = Configs.minSdk
+        targetSdk = Configs.targetSdk
+        versionCode = Configs.versionCode
+        versionName = Configs.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -27,11 +27,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = Configs.javaVersion
+        targetCompatibility = Configs.javaVersion
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = Configs.javaVersion.toString()
     }
     buildFeatures {
         viewBinding = true
