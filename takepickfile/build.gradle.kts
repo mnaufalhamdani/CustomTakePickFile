@@ -48,7 +48,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     // The following line is optional, as the core library is included indirectly by camera-camera2
-    implementation(libs.camerax.core)
     implementation(libs.camerax.camera2)
 
     // If you want to additionally use the CameraX Lifecycle library
