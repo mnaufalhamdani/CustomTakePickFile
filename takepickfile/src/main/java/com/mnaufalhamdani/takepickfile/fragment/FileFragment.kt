@@ -275,8 +275,6 @@ class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
 
     @SuppressLint("WrongConstant")
     private fun bindCameraUserCases() {
-        val rotation = binding.viewFinder.display.rotation
-
         val resolutionSelector = ResolutionSelector.Builder()
             .setAspectRatioStrategy(
                 AspectRatioStrategy(
@@ -286,13 +284,22 @@ class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
             )
             .build()
 
-        val preview = Preview.Builder()
-            .setResolutionSelector(resolutionSelector)
-            .setTargetRotation(rotation)
-            .build()
-            .also {
-                it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
-            }
+        val preview = if(binding.viewFinder.display?.rotation != null){
+            Preview.Builder()
+                .setResolutionSelector(resolutionSelector)
+                .setTargetRotation(binding.viewFinder.display.rotation)
+                .build()
+                .also {
+                    it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
+                }
+        }else{
+            Preview.Builder()
+                .setResolutionSelector(resolutionSelector)
+                .build()
+                .also {
+                    it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
+                }
+        }
 
         val recorder = Recorder.Builder()
             .setQualitySelector(
@@ -305,14 +312,23 @@ class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
             .build()
 
         videoCapture = VideoCapture.withOutput(recorder).apply {
-            targetRotation = rotation
+            binding.viewFinder.display?.rotation?.let {
+                targetRotation = it
+            }
         }
 
-        imageCapture = ImageCapture.Builder()
-            .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
-            .setResolutionSelector(resolutionSelector)
-            .setTargetRotation(rotation)
-            .build()
+        imageCapture = if(binding.viewFinder.display?.rotation != null){
+            ImageCapture.Builder()
+                .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
+                .setResolutionSelector(resolutionSelector)
+                .setTargetRotation(binding.viewFinder.display?.rotation ?: 0)
+                .build()
+        }else{
+            ImageCapture.Builder()
+                .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
+                .setResolutionSelector(resolutionSelector)
+                .build()
+        }
 
         cameraSelector = CameraSelector.Builder()
             .requireLensFacing(lensCamera)
