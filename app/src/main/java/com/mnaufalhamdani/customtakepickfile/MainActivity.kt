@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
                 .defaultCamera(TakePickFile.LensCamera.LENS_BACK_CAMERA)//default is LENS_FRONT_CAMERA
                 .typeMedia(TakePickFile.TypeMedia.PHOTO)//default is PHOTO
                 .setLineOfId(true)//default is false
+                .cameraOnly(true)//default is false
                 .start(0)
         }
 

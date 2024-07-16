@@ -52,6 +52,7 @@ import androidx.core.net.toFile
 import com.google.android.gms.location.LocationRequest
 import com.mnaufalhamdani.takepickfile.R
 import com.mnaufalhamdani.takepickfile.TakePickFile
+import com.mnaufalhamdani.takepickfile.TakePickFile.Companion.EXTRA_CAMERA_ONLY
 import com.mnaufalhamdani.takepickfile.TakePickFile.Companion.EXTRA_IS_FACE_DETECTION
 import com.mnaufalhamdani.takepickfile.TakePickFile.Companion.EXTRA_IS_WATERMARK
 import com.mnaufalhamdani.takepickfile.TakePickFile.Companion.EXTRA_LATITUDE
@@ -83,6 +84,7 @@ class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
     private var lensCamera: Int = 1
     private val typeMedia by lazy { arguments?.getInt(EXTRA_TYPE_MEDIA) ?: 0 }
     private val showLineOfId by lazy { arguments?.getBoolean(EXTRA_LINE_OF_ID) ?: false }
+    private val cameraOnly by lazy { arguments?.getBoolean(EXTRA_CAMERA_ONLY) ?: false }
     private val isFaceDetection by lazy { arguments?.getBoolean(EXTRA_IS_FACE_DETECTION) ?: false }
     private val isWaterMark by lazy { arguments?.getBoolean(EXTRA_IS_WATERMARK) ?: false }
     private val latitude by lazy { arguments?.getDouble(EXTRA_LATITUDE) ?: 0.0 }
@@ -127,6 +129,10 @@ class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
             }else{
                 binding.lineOfId.visibility = View.VISIBLE
             }
+        }
+
+        if (cameraOnly){
+            binding.btnGallery.visibility = View.INVISIBLE
         }
 
         binding.btnSwitchCamera.setOnClickListener {

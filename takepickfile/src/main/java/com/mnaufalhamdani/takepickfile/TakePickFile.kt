@@ -19,6 +19,7 @@ open class TakePickFile {
         internal const val EXTRA_TYPE_MEDIA = "EXTRA_TYPE_MEDIA"
         internal const val EXTRA_LENS_CAMERA = "EXTRA_LENS_CAMERA"
         internal const val EXTRA_LINE_OF_ID = "EXTRA_LINE_OF_ID"
+        internal const val EXTRA_CAMERA_ONLY = "EXTRA_CAMERA_ONLY"
 
         //use for Face Camera
         internal const val EXTRA_LATITUDE = "EXTRA_LATITUDE"
@@ -61,6 +62,7 @@ open class TakePickFile {
         private var typeMedia: TypeMedia = TypeMedia.PHOTO
         private var lensFacing: LensCamera = LensCamera.LENS_FRONT_CAMERA
         private var showLineOfId: Boolean = false
+        private var cameraOnly: Boolean = false
         private var latitude: Double = 0.0
         private var longitude: Double = 0.0
         private var isFaceDetection: Boolean = false
@@ -85,6 +87,11 @@ open class TakePickFile {
 
         fun setLineOfId(showLineOfId: Boolean): Builder {
             this.showLineOfId = showLineOfId
+            return this
+        }
+
+        fun cameraOnly(cameraOnly: Boolean): Builder {
+            this.cameraOnly = cameraOnly
             return this
         }
 
@@ -114,6 +121,7 @@ open class TakePickFile {
                 putInt(EXTRA_TYPE_MEDIA, typeMedia.value)
                 putInt(EXTRA_LENS_CAMERA, lensFacing.value)
                 putBoolean(EXTRA_LINE_OF_ID, showLineOfId)
+                putBoolean(EXTRA_CAMERA_ONLY, cameraOnly)
                 putBoolean(EXTRA_IS_FACE_DETECTION, isFaceDetection)
                 putBoolean(EXTRA_IS_WATERMARK, isWaterMark)
                 putDouble(EXTRA_LATITUDE, latitude)
