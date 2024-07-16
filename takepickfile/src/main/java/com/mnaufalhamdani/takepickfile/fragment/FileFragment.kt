@@ -9,8 +9,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
-import android.graphics.RectF
-import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
@@ -21,9 +19,7 @@ import android.os.Looper
 import android.os.SystemClock
 import android.provider.MediaStore
 import android.util.Log
-import android.view.MotionEvent
 import android.view.OrientationEventListener
-import android.view.ScaleGestureDetector
 import android.view.Surface
 import android.view.View
 import android.widget.Toast
@@ -52,11 +48,12 @@ import androidx.camera.video.VideoCapture
 import androidx.camera.video.VideoRecordEvent
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.net.toFile
 import com.google.android.gms.location.LocationRequest
 import com.mnaufalhamdani.takepickfile.R
 import com.mnaufalhamdani.takepickfile.TakePickFile
+import com.mnaufalhamdani.takepickfile.TakePickFile.Companion.EXTRA_CAMERA_ONLY
+import com.mnaufalhamdani.takepickfile.TakePickFile.Companion.EXTRA_FRONT_CAMERA_ONLY
 import com.mnaufalhamdani.takepickfile.TakePickFile.Companion.EXTRA_IS_FACE_DETECTION
 import com.mnaufalhamdani.takepickfile.TakePickFile.Companion.EXTRA_IS_WATERMARK
 import com.mnaufalhamdani.takepickfile.TakePickFile.Companion.EXTRA_LATITUDE
@@ -77,7 +74,6 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
 class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
     companion object {
@@ -89,6 +85,8 @@ class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
     private var lensCamera: Int = 1
     private val typeMedia by lazy { arguments?.getInt(EXTRA_TYPE_MEDIA) ?: 0 }
     private val showLineOfId by lazy { arguments?.getBoolean(EXTRA_LINE_OF_ID) ?: false }
+    private val cameraOnly by lazy { arguments?.getBoolean(EXTRA_CAMERA_ONLY) ?: false }
+    private val frontCameraOnly by lazy { arguments?.getBoolean(EXTRA_FRONT_CAMERA_ONLY) ?: false }
     private val isFaceDetection by lazy { arguments?.getBoolean(EXTRA_IS_FACE_DETECTION) ?: false }
     private val isWaterMark by lazy { arguments?.getBoolean(EXTRA_IS_WATERMARK) ?: false }
     private val latitude by lazy { arguments?.getDouble(EXTRA_LATITUDE) ?: 0.0 }
@@ -133,6 +131,14 @@ class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
             }else{
                 binding.lineOfId.visibility = View.VISIBLE
             }
+        }
+
+        if (cameraOnly){
+            binding.btnGallery.visibility = View.INVISIBLE
+        }
+
+        if (frontCameraOnly){
+            binding.btnSwitchCamera.visibility = View.INVISIBLE
         }
 
         binding.btnSwitchCamera.setOnClickListener {

@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.mnaufalhamdani.takepickfile.utils
 
 import android.Manifest
@@ -96,11 +98,11 @@ fun drawMultilineTextToBitmap(context: Context, resId: Bitmap, waterMark: String
     val resources = context.resources
     val scale = resources.displayMetrics.density
     var bitmap = resId
-    var bitmapConfig = bitmap.config
+    val bitmapConfig = bitmap.config
     // set default bitmap config if none
-    if (bitmapConfig == null) {
-        bitmapConfig = Bitmap.Config.ARGB_8888
-    }
+//    if (bitmapConfig == null) {
+//        bitmapConfig = Bitmap.Config.ARGB_8888
+//    }
 
     // resource bitmaps are imutable,
     // so we need to convert it to mutable one

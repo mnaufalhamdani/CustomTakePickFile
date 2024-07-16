@@ -19,23 +19,25 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnCapture.setOnClickListener {
             TakePickFile.with(this)
-                .defaultCamera(TakePickFile.LensCamera.LENS_BACK_CAMERA)//default is LENS_FRONT_CAMERA
+                .defaultCamera(TakePickFile.LensCamera.LENS_BACK_CAMERA)//default is LENS_BACK_CAMERA
                 .typeMedia(TakePickFile.TypeMedia.PHOTO)//default is PHOTO
                 .setLineOfId(false)//default is false
+                .frontCameraOnly(true)//default is false
                 .start(0)
         }
 
         binding.btnCaptureId.setOnClickListener {
             TakePickFile.with(this)
-                .defaultCamera(TakePickFile.LensCamera.LENS_BACK_CAMERA)//default is LENS_FRONT_CAMERA
+                .defaultCamera(TakePickFile.LensCamera.LENS_BACK_CAMERA)//default is LENS_BACK_CAMERA
                 .typeMedia(TakePickFile.TypeMedia.PHOTO)//default is PHOTO
                 .setLineOfId(true)//default is false
+                .cameraOnly(true)//default is false
                 .start(0)
         }
 
         binding.btnRecord.setOnClickListener {
             TakePickFile.with(this)
-                .defaultCamera(TakePickFile.LensCamera.LENS_BACK_CAMERA)//default is LENS_FRONT_CAMERA
+                .defaultCamera(TakePickFile.LensCamera.LENS_BACK_CAMERA)//default is LENS_BACK_CAMERA
                 .typeMedia(TakePickFile.TypeMedia.VIDEO)//default is PHOTO
                 .setLineOfId(false)//default is false
                 .start(0)
@@ -43,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnCaptureFace.setOnClickListener {
             TakePickFile.with(this)
-                .defaultCamera(TakePickFile.LensCamera.LENS_FRONT_CAMERA)//default is LENS_FRONT_CAMERA
+                .defaultCamera(TakePickFile.LensCamera.LENS_FRONT_CAMERA)//default is LENS_BACK_CAMERA
                 .typeMedia(TakePickFile.TypeMedia.PHOTO)//default is PHOTO
                 .setLineOfId(false)//default is false
                 .isFaceDetection(true)//default is false

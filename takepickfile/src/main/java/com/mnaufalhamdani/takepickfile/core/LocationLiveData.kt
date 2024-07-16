@@ -6,7 +6,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
 import androidx.lifecycle.LiveData
-import com.google.android.gms.location.*
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
 
 class LocationLiveData(context: Context, pInterval: Long = 5000, pFastestInterval: Long = 5000,
                        pPriority: Int = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
