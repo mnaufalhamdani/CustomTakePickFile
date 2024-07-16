@@ -4,14 +4,12 @@ package com.mnaufalhamdani.takepickfile.fragment
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.media.MediaPlayer
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
@@ -440,34 +438,18 @@ class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
         val fileName = "IMG_" + SimpleDateFormat(FILENAME_FORMAT, Locale.getDefault())
             .format(System.currentTimeMillis()) + ".jpg"
 
-        val contentValues = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME,fileName)
-            put(MediaStore.Images.Media.MIME_TYPE,"image/jpeg")
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P){
-                put(MediaStore.Images.Media.RELATIVE_PATH,"Pictures/Images")
-            }
-        }
-
         val metadata = ImageCapture.Metadata().apply {
             isReversedHorizontal = (lensCamera == CameraSelector.LENS_FACING_FRONT)
         }
-        val outputOption =
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                OutputFileOptions.Builder(
-                    binding.root.context.contentResolver,
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    contentValues
-                ).setMetadata(metadata).build()
-            }else{
-                val imageFile = File(imageFolder, fileName)
-                OutputFileOptions.Builder(imageFile)
-                    .setMetadata(metadata).build()
-            }
+
+        val imageFile = File(imageFolder, fileName)
+        val outputOptions = OutputFileOptions.Builder(imageFile)
+            .setMetadata(metadata).build()
 
         playCapture(binding.root.context)
 
         imageCapture.takePicture(
-            outputOption,
+            outputOptions,
             ContextCompat.getMainExecutor(binding.root.context),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
@@ -545,16 +527,6 @@ class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
 
         val fileName = "VID_" + SimpleDateFormat(FILENAME_FORMAT, Locale.getDefault())
             .format(System.currentTimeMillis()) + ".mp4"
-
-//        val contentValues = ContentValues().apply {
-//            put(MediaStore.Images.Media.DISPLAY_NAME,fileName)
-//            put(MediaStore.Images.Media.MIME_TYPE,"video/mp4")
-//        }
-
-//        val outputOption = FileOutputOptions
-//            .Builder(binding.root.context.contentResolver, MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
-//            .setContentValues(contentValues)
-//            .build()
 
         val videoFile = File(videoFolder, fileName)
         val fileOutputOptions = FileOutputOptions.Builder(videoFile).build()
