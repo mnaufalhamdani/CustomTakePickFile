@@ -16,7 +16,7 @@
     <com.mnaufalhamdani.takepickfile.core.GraphicOverlay
         android:id="@+id/graphicOverlay"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <View
         android:id="@+id/lineOfId"
@@ -25,16 +25,16 @@
         android:layout_centerInParent="true"
         android:layout_margin="@dimen/_20sdp"
         android:background="@drawable/shape_rounded_border"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_watermark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textSize="@dimen/_10sdp"
+        android:layout_above="@id/linear_bottom"
         android:layout_margin="@dimen/_10sdp"
-        android:layout_above="@id/linear_bottom"/>
+        android:textColor="@color/white"
+        android:textSize="@dimen/_10sdp" />
 
     <LinearLayout
         android:id="@+id/linear_bottom"
@@ -74,7 +74,7 @@
             android:src="@drawable/ic_xml_capture"
             android:visibility="gone"
             app:tint="@color/white"
-            tools:visibility="visible"/>
+            tools:visibility="visible" />
 
         <ImageView
             android:id="@+id/btnTakeVideo"
@@ -83,7 +83,7 @@
             android:contentDescription="@string/app_name"
             android:src="@drawable/ic_xml_record_start"
             android:visibility="gone"
-            tools:visibility="visible"/>
+            tools:visibility="visible" />
 
         <Space
             android:layout_width="0dp"
@@ -115,16 +115,33 @@
         android:src="@drawable/ic_flash_off"
         app:tint="@color/white" />
 
-    <Chronometer
-        android:id="@+id/recodingTimer"
+    <LinearLayout
+        android:id="@+id/lytRecording"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_12sdp"
-        android:textSize="@dimen/_12sdp"
         android:layout_centerHorizontal="true"
-        android:padding="@dimen/_2sdp"
+        android:layout_marginTop="@dimen/_12sdp"
         android:background="@drawable/ic_xml_shape_rectangle"
+        android:orientation="horizontal"
+        android:padding="@dimen/_2sdp"
         android:visibility="gone"
-        android:textColor="@color/white"
-        tools:visibility="visible"/>
+        tools:visibility="visible">
+
+        <Chronometer
+            android:id="@+id/recodingTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_12sdp" />
+
+        <TextView
+            android:id="@+id/totalTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_12sdp"
+            android:visibility="gone"
+            tools:text=" / 00:04"
+            tools:visibility="visible" />
+    </LinearLayout>
 </RelativeLayout>

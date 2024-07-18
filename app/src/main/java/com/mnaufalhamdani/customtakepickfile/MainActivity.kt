@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toFile
 import com.mnaufalhamdani.customtakepickfile.databinding.ActivityMainBinding
@@ -39,6 +40,7 @@ class MainActivity : AppCompatActivity() {
             TakePickFile.with(this)
                 .defaultCamera(TakePickFile.LensCamera.LENS_BACK_CAMERA)//default is LENS_BACK_CAMERA
                 .typeMedia(TakePickFile.TypeMedia.VIDEO)//default is PHOTO
+                .setMaxDuration(0)//in milliseconds
                 .setLineOfId(false)//default is false
                 .start(0)
         }
@@ -57,11 +59,19 @@ class MainActivity : AppCompatActivity() {
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == 0) {
-            if (resultCode == Activity.RESULT_OK) {
-                data?.let {
-                    it.data?.let { uri ->
-                        processFile(uri)
+            when (resultCode) {
+                Activity.RESULT_OK -> {
+                    data?.let {
+                        it.data?.let { uri ->
+                            processFile(uri)
+                        }
                     }
+                }
+                TakePickFile.RESULT_ERROR -> {
+                    Toast.makeText(this, data?.getStringExtra(TakePickFile.EXTRA_ERROR), Toast.LENGTH_SHORT).show()
+                }
+                else -> {
+                    Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show()
                 }
             }
         }
