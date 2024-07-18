@@ -14,13 +14,14 @@ open class TakePickFile {
         const val RESULT_ERROR = 404
 
         internal const val EXTRA_FILE_PATH = "extra.file_path"
-        internal const val EXTRA_ERROR = "extra.error"
+        const val EXTRA_ERROR = "extra.error"
 
         internal const val EXTRA_TYPE_MEDIA = "EXTRA_TYPE_MEDIA"
         internal const val EXTRA_LENS_CAMERA = "EXTRA_LENS_CAMERA"
         internal const val EXTRA_LINE_OF_ID = "EXTRA_LINE_OF_ID"
         internal const val EXTRA_CAMERA_ONLY = "EXTRA_CAMERA_ONLY"
         internal const val EXTRA_FRONT_CAMERA_ONLY = "EXTRA_FRONT_CAMERA_ONLY"
+        internal const val EXTRA_MAX_DURATION = "EXTRA_MAX_DURATION"
 
         //use for Face Camera
         internal const val EXTRA_LATITUDE = "EXTRA_LATITUDE"
@@ -65,6 +66,7 @@ open class TakePickFile {
         private var showLineOfId: Boolean = false
         private var cameraOnly: Boolean = false
         private var frontCameraOnly: Boolean = false
+        private var maxDuration: Long = 0
         private var latitude: Double = 0.0
         private var longitude: Double = 0.0
         private var isFaceDetection: Boolean = false
@@ -104,6 +106,11 @@ open class TakePickFile {
             return this
         }
 
+        fun setMaxDuration(maxDuration: Long): Builder {
+            this.maxDuration = maxDuration
+            return this
+        }
+
         fun coordinat(latitude: Double, longitude: Double): Builder {
             this.latitude = latitude
             this.longitude = longitude
@@ -132,6 +139,7 @@ open class TakePickFile {
                 putBoolean(EXTRA_LINE_OF_ID, showLineOfId)
                 putBoolean(EXTRA_CAMERA_ONLY, cameraOnly)
                 putBoolean(EXTRA_FRONT_CAMERA_ONLY, frontCameraOnly)
+                putLong(EXTRA_MAX_DURATION, maxDuration)
                 putBoolean(EXTRA_IS_FACE_DETECTION, isFaceDetection)
                 putBoolean(EXTRA_IS_WATERMARK, isWaterMark)
                 putDouble(EXTRA_LATITUDE, latitude)
