@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
             TakePickFile.with(this)
                 .defaultCamera(TakePickFile.LensCamera.LENS_BACK_CAMERA)//default is LENS_BACK_CAMERA
                 .typeMedia(TakePickFile.TypeMedia.VIDEO)//default is PHOTO
-                .setMaxDuration(2000)//in milliseconds
+                .setMaxDuration(0)//in milliseconds
                 .setLineOfId(false)//default is false
                 .start(0)
         }

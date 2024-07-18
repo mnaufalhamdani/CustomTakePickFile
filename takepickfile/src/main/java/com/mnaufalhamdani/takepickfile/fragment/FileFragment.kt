@@ -252,16 +252,19 @@ class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
                         val file = File(newPath)
                         val uri = Uri.fromFile(file)
 
-                        val mp: MediaPlayer = MediaPlayer.create(binding.root.context, uri)
-                        val duration = mp.duration
-                        mp.release()
+                        if (typeMedia == TakePickFile.TypeMedia.VIDEO.value){
+                            val mp: MediaPlayer = MediaPlayer.create(binding.root.context, uri)
+                            val duration = mp.duration
+                            mp.release()
 
-                        if (maxDuration > 1000) {
-                            if (duration >= maxDuration + 1000) {// + 1 second for buffer
-                                onResult.onResulError("Video too long")
-                                return@let
+                            if (maxDuration > 1000) {
+                                if (duration >= maxDuration + 1000) {// + 1 second for buffer
+                                    onResult.onResulError("Video too long")
+                                    return@let
+                                }
                             }
                         }
+
                         onResult.onFileResult(uri)
                     }
                 }
