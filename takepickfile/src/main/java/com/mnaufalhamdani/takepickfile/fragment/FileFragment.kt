@@ -1,4 +1,4 @@
-@file:Suppress("DEPRECATION")
+@file:Suppress("DEPRECATION", "LABEL_NAME_CLASH")
 
 package com.mnaufalhamdani.takepickfile.fragment
 
@@ -58,6 +58,7 @@ import com.mnaufalhamdani.takepickfile.TakePickFile.Companion.EXTRA_LATITUDE
 import com.mnaufalhamdani.takepickfile.TakePickFile.Companion.EXTRA_LENS_CAMERA
 import com.mnaufalhamdani.takepickfile.TakePickFile.Companion.EXTRA_LINE_OF_ID
 import com.mnaufalhamdani.takepickfile.TakePickFile.Companion.EXTRA_LONGITUDE
+import com.mnaufalhamdani.takepickfile.TakePickFile.Companion.EXTRA_MAX_DURATION
 import com.mnaufalhamdani.takepickfile.TakePickFile.Companion.EXTRA_TYPE_MEDIA
 import com.mnaufalhamdani.takepickfile.core.FaceContourDetectionProcessor
 import com.mnaufalhamdani.takepickfile.core.LocationLiveData
@@ -73,6 +74,7 @@ import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
+
 class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
     companion object {
         private const val TAG = "CameraXFragment"
@@ -85,6 +87,7 @@ class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
     private val showLineOfId by lazy { arguments?.getBoolean(EXTRA_LINE_OF_ID) ?: false }
     private val cameraOnly by lazy { arguments?.getBoolean(EXTRA_CAMERA_ONLY) ?: false }
     private val frontCameraOnly by lazy { arguments?.getBoolean(EXTRA_FRONT_CAMERA_ONLY) ?: false }
+    private val maxDuration by lazy { arguments?.getLong(EXTRA_MAX_DURATION) ?: 0 }
     private val isFaceDetection by lazy { arguments?.getBoolean(EXTRA_IS_FACE_DETECTION) ?: false }
     private val isWaterMark by lazy { arguments?.getBoolean(EXTRA_IS_WATERMARK) ?: false }
     private val latitude by lazy { arguments?.getDouble(EXTRA_LATITUDE) ?: 0.0 }
@@ -246,7 +249,19 @@ class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
                     }
 
                     path?.let { newPath ->
-                        val uri = Uri.fromFile(File(newPath))
+                        val file = File(newPath)
+                        val uri = Uri.fromFile(file)
+
+                        val mp: MediaPlayer = MediaPlayer.create(binding.root.context, uri)
+                        val duration = mp.duration
+                        mp.release()
+
+                        if (maxDuration > 1000) {
+                            if (duration >= maxDuration + 1000) {// + 1 second for buffer
+                                onResult.onResulError("Video too long")
+                                return@let
+                            }
+                        }
                         onResult.onFileResult(uri)
                     }
                 }
@@ -429,7 +444,7 @@ class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
         val imageFolder = File(
             Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES
-            ), getString(R.string.app_name)
+            ), binding.root.context.getString(R.string.app_name)
         )
         if (!imageFolder.exists()) {
             imageFolder.mkdir()
@@ -519,7 +534,7 @@ class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
         val videoFolder = File(
             Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_MOVIES
-            ), getString(R.string.app_name)
+            ), binding.root.context.getString(R.string.app_name)
         )
         if (!videoFolder.exists()) {
             videoFolder.mkdir()
@@ -584,10 +599,23 @@ class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
 
     private val handler = Handler(Looper.getMainLooper())
     private val updateTimer = object : Runnable{
+        @SuppressLint("SetTextI18n")
         override fun run() {
             val currentTime = SystemClock.elapsedRealtime() - binding.recodingTimer.base
+
+            if (maxDuration > 1000) {
+                if (currentTime >= maxDuration) {
+                    takeVideo()
+                }
+
+                val totalTimeString = maxDuration.toFormattedTime()
+                binding.totalTimer.visibility = View.VISIBLE
+                binding.totalTimer.text = " / $totalTimeString"
+            }
+
             val timeString = currentTime.toFormattedTime()
             binding.recodingTimer.text = timeString
+
             handler.postDelayed(this,1000)
         }
     }
@@ -606,14 +634,14 @@ class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
     }
 
     private fun startRecording(){
-        binding.recodingTimer.visibility = View.VISIBLE
+        binding.lytRecording.visibility = View.VISIBLE
         binding.recodingTimer.base = SystemClock.elapsedRealtime()
         binding.recodingTimer.start()
         handler.post(updateTimer)
     }
 
     private fun stopRecording(){
-        binding.recodingTimer.visibility = View.GONE
+        binding.lytRecording.visibility = View.GONE
         binding.recodingTimer.stop()
         handler.removeCallbacks(updateTimer)
     }
