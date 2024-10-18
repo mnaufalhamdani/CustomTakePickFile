@@ -19,14 +19,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnCapture.setOnClickListener {
-//            TakePickFile.with(this)
-//                .defaultCamera(TakePickFile.LensCamera.LENS_BACK_CAMERA)//default is LENS_BACK_CAMERA
-//                .typeMedia(TakePickFile.TypeMedia.PHOTO)//default is PHOTO
-//                .setLineOfId(false)//default is false
-//                .frontCameraOnly(true)//default is false
-//                .start(0)
             TakePickFile.with(this)
-                .cameraOnly(true)
+                .defaultCamera(TakePickFile.LensCamera.LENS_BACK_CAMERA)//default is LENS_BACK_CAMERA
+                .typeMedia(TakePickFile.TypeMedia.PHOTO)//default is PHOTO
+                .frontCameraOnly(true)//default is false
+                .isWaterMark(true)
+//                .additionalWaterMark("Anda berada diluar jangkuan outlet")
                 .start(0)
         }
 

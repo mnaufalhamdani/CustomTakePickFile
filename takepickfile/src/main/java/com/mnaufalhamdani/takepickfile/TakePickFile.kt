@@ -28,6 +28,7 @@ open class TakePickFile {
         internal const val EXTRA_LONGITUDE = "EXTRA_LONGITUDE"
         internal const val EXTRA_IS_FACE_DETECTION = "EXTRA_IS_FACE_DETECTION"
         internal const val EXTRA_IS_WATERMARK = "EXTRA_IS_WATERMARK"
+        internal const val EXTRA_IS_ADDITIONALWATERMARK = "EXTRA_IS_ADDITIONALWATERMARK"
 
         /**
          * Use this to use CaptureCameraX in Activity Class
@@ -71,6 +72,7 @@ open class TakePickFile {
         private var longitude: Double = 0.0
         private var isFaceDetection: Boolean = false
         private var isWaterMark: Boolean = false
+        private var additionalWaterMark: String? = null
 
         /**
          * Call this while picking image for fragment.
@@ -127,6 +129,11 @@ open class TakePickFile {
             return this
         }
 
+        fun additionalWaterMark(additionalWaterMark: String?): Builder {
+            this.additionalWaterMark = additionalWaterMark
+            return this
+        }
+
         fun start(reqCode: Int) {
             if (!singleClick()) return
             startActivity(reqCode)
@@ -142,6 +149,7 @@ open class TakePickFile {
                 putLong(EXTRA_MAX_DURATION, maxDuration)
                 putBoolean(EXTRA_IS_FACE_DETECTION, isFaceDetection)
                 putBoolean(EXTRA_IS_WATERMARK, isWaterMark)
+                putString(EXTRA_IS_ADDITIONALWATERMARK, additionalWaterMark)
                 putDouble(EXTRA_LATITUDE, latitude)
                 putDouble(EXTRA_LONGITUDE, longitude)
             }

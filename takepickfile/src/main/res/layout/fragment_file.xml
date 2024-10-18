@@ -28,6 +28,19 @@
         android:visibility="gone" />
 
     <TextView
+        android:id="@+id/tv_additional_watermark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/amber_A400"
+        android:textSize="15sp"
+        android:gravity="center"
+        android:background="@color/overlay_dark_50"
+        android:layout_marginBottom="@dimen/_20sdp"
+        android:visibility="gone"
+        android:layout_above="@id/tv_watermark"
+        tools:visibility="visible"/>
+
+    <TextView
         android:id="@+id/tv_watermark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

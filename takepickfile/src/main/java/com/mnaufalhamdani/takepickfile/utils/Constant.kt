@@ -19,6 +19,8 @@ import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.Log
+import androidx.core.content.ContextCompat
+import com.mnaufalhamdani.takepickfile.R
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -129,6 +131,67 @@ fun drawMultilineTextToBitmap(context: Context, resId: Bitmap, waterMark: String
     // get position of text's top left corner
     val x = (bitmap.width - textWidth) / 2
     val y = (bitmap.height - textHeight) * 98 / 100
+
+    // draw text to the Canvas center
+    canvas.save()
+    canvas.translate(x.toFloat(), y.toFloat())
+    textLayout.draw(canvas)
+    canvas.restore()
+    return bitmap
+}
+
+fun drawAddMultilineTextToBitmap(context: Context, resId: Bitmap, additionalWatermark: String?, textSize: Int?): Bitmap {
+    //set TextSize
+    var mSize = textSize
+    if (mSize == null) mSize = 12
+
+    // prepare canvas
+    val resources = context.resources
+    val scale = resources.displayMetrics.density
+    var bitmap = resId
+    var bitmapConfig = bitmap.config
+    // set default bitmap config if none
+    if (bitmapConfig == null) {
+        bitmapConfig = Bitmap.Config.ARGB_8888
+    }
+
+    // resource bitmaps are imutable,
+    // so we need to convert it to mutable one
+    bitmap = bitmap.copy(bitmapConfig, true)
+    val canvas = Canvas(bitmap)
+
+    // new antialiased Paint
+    val paint = TextPaint(Paint.ANTI_ALIAS_FLAG)
+    // text color - #3D3D3D
+    paint.color = ContextCompat.getColor(context, R.color.amber_A700)
+    // text size in pixels
+    paint.textSize = mSize * scale * 2
+
+    // set text width to canvas width minus 16dp padding
+    val textWidth = canvas.width - (16 * scale).toInt()
+    // init StaticLayout for text
+    val textLayout = StaticLayout(
+        additionalWatermark, paint, textWidth, Layout.Alignment.ALIGN_CENTER,
+        1.0f, 2.0f, false
+    )
+
+    // get height of multiline text
+    val textHeight = textLayout.height
+    // get position of text's top left corner
+    val x = 0
+    val y = (bitmap.height - textHeight) * 85 / 100
+
+    val textBackgroundPaint = Paint().apply {
+        color = ContextCompat.getColor(context, R.color.overlay_dark_50)
+    }
+
+    canvas.drawRect(
+        x - textLayout.width.toFloat(),
+        y - 10f,
+        x + textLayout.width.toFloat() + 50f,
+        y + textHeight + 10f,
+        textBackgroundPaint
+    )
 
     // draw text to the Canvas center
     canvas.save()
