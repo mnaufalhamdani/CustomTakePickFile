@@ -50,6 +50,7 @@ import com.mnaufalhamdani.takepickfile.R
 import com.mnaufalhamdani.takepickfile.TakePickFile
 import com.mnaufalhamdani.takepickfile.TakePickFile.Companion.EXTRA_CAMERA_ONLY
 import com.mnaufalhamdani.takepickfile.TakePickFile.Companion.EXTRA_FRONT_CAMERA_ONLY
+import com.mnaufalhamdani.takepickfile.TakePickFile.Companion.EXTRA_IS_ADDITIONALWATERMARK
 import com.mnaufalhamdani.takepickfile.TakePickFile.Companion.EXTRA_IS_FACE_DETECTION
 import com.mnaufalhamdani.takepickfile.TakePickFile.Companion.EXTRA_IS_WATERMARK
 import com.mnaufalhamdani.takepickfile.TakePickFile.Companion.EXTRA_LATITUDE
@@ -63,6 +64,7 @@ import com.mnaufalhamdani.takepickfile.core.LocationLiveData
 import com.mnaufalhamdani.takepickfile.databinding.FragmentFileBinding
 import com.mnaufalhamdani.takepickfile.utils.FileResult
 import com.mnaufalhamdani.takepickfile.utils.convertPathToBitmap
+import com.mnaufalhamdani.takepickfile.utils.drawAddMultilineTextToBitmap
 import com.mnaufalhamdani.takepickfile.utils.drawMultilineTextToBitmap
 import com.mnaufalhamdani.takepickfile.utils.getAddressFromGPS
 import com.mnaufalhamdani.takepickfile.utils.saveBitmap
@@ -88,6 +90,7 @@ class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
     private val maxDuration by lazy { arguments?.getLong(EXTRA_MAX_DURATION) ?: 0 }
     private val isFaceDetection by lazy { arguments?.getBoolean(EXTRA_IS_FACE_DETECTION) ?: false }
     private val isWaterMark by lazy { arguments?.getBoolean(EXTRA_IS_WATERMARK) ?: false }
+    private val additionalWaterMark by lazy { arguments?.getString(EXTRA_IS_ADDITIONALWATERMARK) }
     private val latitude by lazy { arguments?.getDouble(EXTRA_LATITUDE) ?: 0.0 }
     private val longitude by lazy { arguments?.getDouble(EXTRA_LONGITUDE) ?: 0.0 }
     private var mLatitude = 0.0
@@ -184,6 +187,12 @@ class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
                         mLongitude = longitude
 
                         binding.tvWatermark.text = setLocation(mLatitude, mLongitude)
+
+                        binding.tvAdditionalWatermark.visibility = View.GONE
+                        if (!additionalWaterMark.isNullOrEmpty()) {
+                            binding.tvAdditionalWatermark.visibility = View.VISIBLE
+                            binding.tvAdditionalWatermark.text = additionalWaterMark
+                        }
                     }
                     binding.btnTakePicture.visibility = View.VISIBLE
                     binding.btnTakeVideo.visibility = View.GONE
@@ -486,14 +495,30 @@ class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
                                 binding.root.context,
                                 converBitmap,
                                 setLocation(mLatitude, mLongitude).toString(),
-                                12
+                                14
                             )
-                            saveBitmap(saved.toFile().absolutePath, bitmap) {
-                                if (!it){
-                                    Toast.makeText(binding.root.context, "Photo save failed", Toast.LENGTH_SHORT).show()
-                                    return@saveBitmap
+                            if (!additionalWaterMark.isNullOrEmpty()) {
+                                val addBitmap = drawAddMultilineTextToBitmap(
+                                    binding.root.context,
+                                    bitmap,
+                                    additionalWaterMark,
+                                    28
+                                )
+                                saveBitmap(saved.toFile().absolutePath, addBitmap) {
+                                    if (!it){
+                                        Toast.makeText(binding.root.context, "Photo save failed", Toast.LENGTH_SHORT).show()
+                                        return@saveBitmap
+                                    }
+                                    onResult.onFileResult(saved)
                                 }
-                                onResult.onFileResult(saved)
+                            }else {
+                                saveBitmap(saved.toFile().absolutePath, bitmap) {
+                                    if (!it){
+                                        Toast.makeText(binding.root.context, "Photo save failed", Toast.LENGTH_SHORT).show()
+                                        return@saveBitmap
+                                    }
+                                    onResult.onFileResult(saved)
+                                }
                             }
                         }else{
                             onResult.onFileResult(saved)
