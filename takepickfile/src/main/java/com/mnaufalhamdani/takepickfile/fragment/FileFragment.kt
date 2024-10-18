@@ -33,8 +33,6 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.MeteringPointFactory
 import androidx.camera.core.Preview
 import androidx.camera.core.SurfaceOrientedMeteringPointFactory
-import androidx.camera.core.resolutionselector.AspectRatioStrategy
-import androidx.camera.core.resolutionselector.ResolutionSelector
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.video.FallbackStrategy
 import androidx.camera.video.FileOutputOptions
@@ -143,17 +141,21 @@ class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
         }
 
         binding.btnSwitchCamera.setOnClickListener {
-            lensCamera = if (lensCamera == CameraSelector.LENS_FACING_FRONT) {
-                binding.btnSwitchCamera.animate().setDuration(200).rotation(0f)
-                CameraSelector.LENS_FACING_BACK
-            } else {
-                camera.cameraControl.enableTorch(false)
-                binding.btnFlashCamera.setImageResource(R.drawable.ic_flash_off)
+            try {
+                lensCamera = if (lensCamera == CameraSelector.LENS_FACING_FRONT) {
+                    binding.btnSwitchCamera.animate().setDuration(200).rotation(0f)
+                    CameraSelector.LENS_FACING_BACK
+                } else {
+                    camera.cameraControl.enableTorch(false)
+                    binding.btnFlashCamera.setImageResource(R.drawable.ic_flash_off)
 
-                binding.btnSwitchCamera.animate().setDuration(200).rotation(180f)
-                CameraSelector.LENS_FACING_FRONT
+                    binding.btnSwitchCamera.animate().setDuration(200).rotation(180f)
+                    CameraSelector.LENS_FACING_FRONT
+                }
+                bindCameraUserCases()
+            }catch (e: Exception) {
+                e.printStackTrace()
             }
-            bindCameraUserCases()
         }
 
         binding.btnFlashCamera.setOnClickListener {
@@ -291,18 +293,18 @@ class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
 
     @SuppressLint("WrongConstant")
     private fun bindCameraUserCases() {
-        val resolutionSelector = ResolutionSelector.Builder()
-            .setAspectRatioStrategy(
-                AspectRatioStrategy(
-                    aspectRatio,
-                    AspectRatioStrategy.FALLBACK_RULE_AUTO
-                )
-            )
-            .build()
+//        val resolutionSelector = ResolutionSelector.Builder()
+//            .setAspectRatioStrategy(
+//                AspectRatioStrategy(
+//                    aspectRatio,
+//                    AspectRatioStrategy.FALLBACK_RULE_AUTO
+//                )
+//            )
+//            .build()
 
         val preview = if(binding.viewFinder.display?.rotation != null){
             Preview.Builder()
-                .setResolutionSelector(resolutionSelector)
+//                .setResolutionSelector(resolutionSelector)
                 .setTargetRotation(binding.viewFinder.display.rotation)
                 .build()
                 .also {
@@ -310,7 +312,7 @@ class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
                 }
         }else{
             Preview.Builder()
-                .setResolutionSelector(resolutionSelector)
+//                .setResolutionSelector(resolutionSelector)
                 .build()
                 .also {
                     it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
@@ -336,13 +338,13 @@ class FileFragment : BaseFragment<FragmentFileBinding>(R.layout.fragment_file) {
         imageCapture = if(binding.viewFinder.display?.rotation != null){
             ImageCapture.Builder()
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
-                .setResolutionSelector(resolutionSelector)
+//                .setResolutionSelector(resolutionSelector)
                 .setTargetRotation(binding.viewFinder.display?.rotation ?: 0)
                 .build()
         }else{
             ImageCapture.Builder()
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
-                .setResolutionSelector(resolutionSelector)
+//                .setResolutionSelector(resolutionSelector)
                 .build()
         }
 
