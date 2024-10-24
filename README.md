@@ -1,6 +1,6 @@
-## Face Camera X
+## Custom Take Pick File
 
-Face camera is a module for cameras with face and location detection using supporting modules, including:
+TakePickFile is a module for camera with face detection, location from coordinate, record video, capture photo ID card and pick file (photo or video) from gallery. Using supporting modules, including:
 
 - **[CameraX](https://developer.android.com/training/camerax)**: CameraX is a Jetpack library, built to make developing camera apps easy.
 - **[ML Kit](https://developers.google.com/ml-kit)**: ML Kit’s processing happens on-device. This makes it fast and unlocks real-time use cases like processing of camera input. It also works while offline and can be used for processing images that need to remain on the device.
@@ -13,9 +13,11 @@ Face camera is a module for cameras with face and location detection using suppo
 # Preview
 
 
-   Main Sample    |  Camera with No Face Detection  | Camera with Face Detection |
+   Capture with Pick File  |  Capture with ID Card Ruler  | Take Video with Pick File |
 :-------------------------:|:-------------------------:|:-------------------------:
-![](https://github.com/mnaufalhamdani/facecamerax/blob/master/image/photo_2023-03-17_10-02-52.jpg)  |  ![](https://github.com/mnaufalhamdani/facecamerax/blob/master/image/photo_2023-03-17_10-03-00.jpg)  |  ![](https://github.com/mnaufalhamdani/facecamerax/blob/master/image/photo_2023-03-17_10-03-03.jpg)
+![](https://github.com/mnaufalhamdani/CustomTakePickFile/blob/main/image/Screenshot_2024-10-24-09-25-29-60.jpg)  |  ![](https://github.com/mnaufalhamdani/CustomTakePickFile/blob/main/image/Screenshot_2024-10-24-09-26-26-60.jpg)  |  ![](https://github.com/mnaufalhamdani/CustomTakePickFile/blob/main/image/Screenshot_20241024_093019.png)
+   Capture with Face Detection  |  Camera without Face Detection  | Capture with additional Watermark |
+![](https://github.com/mnaufalhamdani/CustomTakePickFile/blob/main/image/Screenshot_2024-10-24-09-27-33-65.jpg)  |  ![](https://github.com/mnaufalhamdani/CustomTakePickFile/blob/main/image/Screenshot_2024-10-24-09-27-47-42.jpg)  |  ![](https://github.com/mnaufalhamdani/CustomTakePickFile/blob/main/image/Screenshot_2024-10-24-09-28-02-12.jpg)
 
 
 # Usage
@@ -23,7 +25,7 @@ Face camera is a module for cameras with face and location detection using suppo
 
 1. Gradle dependency:
 
-	```groovy
+	```kotlin
 	allprojects {
 	   repositories {
            	maven { url "https://jitpack.io" }
@@ -31,28 +33,39 @@ Face camera is a module for cameras with face and location detection using suppo
 	}
 	```
 
-    ```groovy
+    ```kotlin
    implementation 'com.github.mnaufalhamdani:customtakepickfile:24.10.18'
     ```
 
-2. The Face Camera X configuration is created using the builder pattern.
+2. The TakePickFile configuration is created using the builder pattern.
 
-	**Kotlin**
+	**Kotlin Photo**
 
 	```kotlin
-    FaceCameraX.with(this)
-    	.customPath("YOUR_PATH")					//Custom path photo
-            .compress(80)							//Default compress is 80
-            .coordinat(0.0, 0.0)		                          	//Default coordinat is 0.0
-            .defaultCamera(FaceCameraX.LensCamera.LENS_BACK_CAMERA)      	//Default camera is Front Camera
-            .isFaceDetection(true)                                        	//Default is true
-            .isWaterMark(true)                                            	//Default is true
-            .start()  
+    TakePickFile.with(this)
+		.defaultCamera(TakePickFile.LensCamera.LENS_FRONT_CAMERA)	//default is LENS_BACK_CAMERA
+		.typeMedia(TakePickFile.TypeMedia.PHOTO)			//default is PHOTO (PHOTO or VIDEO)
+		.setLineOfId(true)						//default is false (for ID Card Ruler)
+		.cameraOnly(true)						//default is false (if false, pick file from gallery)
+	 	.isFaceDetection(true)						//default is false
+	 	.isWaterMark(true)						//default is false
+	 	.additionalWaterMark("Custom Watermark is here")		//default is null (if using this line, always additional text)
+		.start(0)
+    ```
+
+ 	**Kotlin Video**
+
+	```kotlin
+    TakePickFile.with(this)
+		.defaultCamera(TakePickFile.LensCamera.LENS_FRONT_CAMERA)	//default is LENS_BACK_CAMERA
+		.typeMedia(TakePickFile.TypeMedia.VIDEO)			//default is PHOTO (PHOTO or VIDEO)
+ 		.setMaxDuration(0)						//default is null or 0 (if using this line, in milliseconds)
+		.start(0)
     ```
     
 3. Handling results
 
-    **Override `onActivityResult` method and handle Face Camera X result.**
+    **Override `onActivityResult` method and handle TakePickFile result.**
 
     ```kotlin
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -73,7 +86,7 @@ Face camera is a module for cameras with face and location detection using suppo
 
 ## License
 
-    Copyright 2023, mnaufalhamdani
+    Copyright 2024, mnaufalhamdani
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
